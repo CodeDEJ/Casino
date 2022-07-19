@@ -1,5 +1,7 @@
 package com.github.zipcodewilmington.casino.blackjack;
 
+import com.github.zipcodewilmington.casino.GameInterface;
+import com.github.zipcodewilmington.casino.PlayerInterface;
 import com.github.zipcodewilmington.casino.games.Card;
 import com.github.zipcodewilmington.casino.games.DeckOfCards;
 
@@ -11,15 +13,17 @@ import java.util.Random;
 
 
 
-public class BlackJackGame {
+public class BlackJackGame implements GameInterface {
+    DeckOfCards deck = new DeckOfCards(true);
     int playerValue = 0;
-    //DeckOfCards.blackJackTrueWarFalse = true;
-    DeckOfCards deck = new DeckOfCards();
+
     int dealerValue = 0;
 
     int playerChips = 500;
 
     int playerBet = 0;
+
+
     ArrayList<Card> playHand = new ArrayList<>();
     ArrayList<Card> dealHand = new ArrayList<>();
     Scanner scan = new Scanner (System.in);
@@ -31,6 +35,7 @@ public class BlackJackGame {
     public static void main(String[] args) {
         System.out.println("Welcome to the Bobby's Brutal Blackjack. Name's Bobby, nice to meet cha.");
         BlackJackGame bj = new BlackJackGame();
+//        DeckOfCards.blackJackTrueWarFalse = true;
 //        DeckOfCards deck = new DeckOfCards();
 //        deck.shuffle();
 //        deck.shuffle();
@@ -39,14 +44,13 @@ public class BlackJackGame {
 //        System.out.println(playHand.get(0) +  "" +playHand.get(0).getValue());
 //        for (int i = 0; i  <deck.size();i++){
 //            System.out.println(deck.get(i) + " " + deck.get(i).getValue());
-        DeckOfCards deck = new DeckOfCards();
+
         bj.playGame();
     }
 
 
     void playGame() {
         Scanner scan = new Scanner(System.in);
-        DeckOfCards deck = new DeckOfCards();
         deck.shuffle();
         welcomeStatement();
         showPlayerBet();
@@ -94,7 +98,6 @@ public class BlackJackGame {
     }
 
     public int showDealerDraw1(){
-        DeckOfCards.blackJackTrueWarFalse = true;
         if (deck.get(0).getValue() != 10){
             deck.shuffle();
             showDealerDraw1();
@@ -110,8 +113,7 @@ public class BlackJackGame {
 
 
     public int showDealerDraw2(){
-        DeckOfCards.blackJackTrueWarFalse = true;
-        if (deck.get(0).getValue() != 6){
+        if (deck.get(0).getValue() != 11){
             deck.shuffle();
             showDealerDraw2();
         }else {
@@ -125,7 +127,6 @@ public class BlackJackGame {
     }
 
     public int showPlayerDraw(){
-        DeckOfCards.blackJackTrueWarFalse = true;
         deck.shuffle();
         if (deck.get(0).getValue() == 11){
             System.out.println(playHand);
@@ -136,8 +137,8 @@ public class BlackJackGame {
             playerValue += deck.get(0).getValue();
             playHand.add((deck.get(0)));
             deck.draw();
-            System.out.println(playHand);
-            System.out.println("\n");
+            System.out.println(playHand.toString());
+
             }
            return playerValue;
         }
@@ -204,6 +205,8 @@ public class BlackJackGame {
         System.out.println("Woah! You got " + playerValue + " and won " + playerBet + " chips! You now have " + playerChips + " chips! Hit enter to try again.");
         playerValue = 0;
         dealerValue = 0;
+        deck.addAllCard(playHand);
+        deck.addAllCard(dealHand);
         playHand.clear();
         dealHand.clear();
         scan.nextLine();
@@ -214,11 +217,16 @@ public class BlackJackGame {
         Scanner scan = new Scanner(System.in);
         playerChips-=playerBet;
         System.out.println(playerValue + "! Welp, them's the breaks, kid. You lost " + playerBet + " chips and now have " + playerChips + " chips. Hit enter to play again.");
+
+
         playerValue = 0;
         dealerValue = 0;
+        deck.addAllCard(playHand);
+        deck.addAllCard(dealHand);
         playHand.clear();
         dealHand.clear();
-        scan.nextLine();
+
+//        scan.nextLine();
         playGame();
     }
 
@@ -228,9 +236,11 @@ public class BlackJackGame {
         System.out.println("An easy 21 for me! Welp, them's the breaks, kid. You lost " + playerBet + " chips and now have " + playerChips + " chips. Hit enter to play again.");
         playerValue = 0;
         dealerValue = 0;
+        deck.addAllCard(playHand);
+        deck.addAllCard(dealHand);
         playHand.clear();
         dealHand.clear();
-        scan.nextLine();
+//        scan.nextLine();
         playGame();
     }
 
@@ -247,4 +257,19 @@ public class BlackJackGame {
         return playerBet;
     }
 
+    @Override
+    public void add(PlayerInterface player) {
+
+    }
+
+    @Override
+    public void remove(PlayerInterface player) {
+
+    }
+
+    @Override
+    public void run() {
+        playGame();
+
+    }
 }
